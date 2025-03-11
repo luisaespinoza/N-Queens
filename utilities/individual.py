@@ -1,5 +1,6 @@
 import random
-
+# this is a test
+# hi daniela
 # default argument values
 BOARD_SIZE = 8
 POPULATION_SIZE = 100

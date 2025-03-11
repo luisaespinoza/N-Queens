@@ -31,3 +31,39 @@ def select(population):
     tournament_size = 3
     tournament = random.sample(population, tournament_size)
     return min(tournament, key=lambda ind: ind.fitness())
+
+# analytic solution using backtracking algorithm
+# for comparison/benchmarking
+def solve_n_queens(n):
+    def is_safe(board, row, col):
+        # Check this row on left side
+        for i in range(col):
+            if board[row][i] == 1:
+                return False
+
+        # Check upper diagonal on left side
+        for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+            if board[i][j] == 1:
+                return False
+
+        # Check lower diagonal on left side
+        for i, j in zip(range(row, n, 1), range(col, -1, -1)):
+            if board[i][j] == 1:
+                return False
+
+        return True
+
+    def place_queens(n, row, board):
+        if row == n:
+            result.append(board[:])
+            return
+        for col in range(n):
+            if is_safe(board, row, col):
+                board[row][col] = 1
+                place_queens(n, row + 1, board)
+                board[row][col] = 0
+
+    result = []
+    board = [[0]*n for _ in range(n)]
+    place_queens(n, 0, board)
+    return result
