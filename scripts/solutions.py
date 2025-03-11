@@ -1,16 +1,16 @@
 import random
-import time
 
-# Constants for the genetic algorithm
+# Constants
+BOARD_SIZE = 8
 POPULATION_SIZE = 100
-MAX_GENERATIONS_PER_STEP = 100
-MUTATION_RATE = 0.1
+MAX_GENERATIONS_PER_STEP = 500
+MUTATION_RATE = 0.15
 
 # Represents a partial solution with k queens
 class Individual:
-    def __init__(self, size, board_size):
+    def __init__(self, size):
         """Initialize with a random permutation of columns for the first 'size' rows."""
-        columns = list(range(board_size))
+        columns = list(range(BOARD_SIZE))
         random.shuffle(columns)
         self.queens = columns[:size]  # queens[i] is the column for the queen in row i
 
@@ -38,7 +38,7 @@ class Individual:
         min_conflicts = board_size + 1
         best_col = available_columns[0]
         for col in available_columns:
-            conflicts = sum(1 for i in range(len(self.queens)) 
+            conflicts = sum(1 for i in range(len(self.queens))
                            if abs(i - len(self.queens)) == abs(self.queens[i] - col))
             if conflicts < min_conflicts:
                 min_conflicts = conflicts
@@ -194,7 +194,7 @@ def main():
     global board_size  # Declare board_size as global to use in crossover
     print("N-Queens Solver: Genetic Algorithm vs Backtracking")
     print("------------------------------------------------")
-    
+
     # Get board size from user
     try:
         board_size = int(input("Enter the board size (N for N-Queens, default 8): ") or 8)
@@ -276,3 +276,10 @@ def main():
 if __name__ == "__main__":
     random.seed()  # Seed with system time
     main()
+
+    cProfile.run('ourSolutionTest()')
+    # If no perfect solution is found, print the best one
+    print("No perfect solution found.")
+    best = min(population, key=lambda ind: ind.fitness())
+    print(f"Best solution (conflicts = {best.fitness()}): {best.queens}")
+    print_solution(best, BOARD_SIZE)
