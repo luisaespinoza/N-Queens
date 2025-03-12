@@ -7,11 +7,12 @@ BOARD_SIZE=individual.BOARD_SIZE
 POPULATION_SIZE =  individual.POPULATION_SIZE
 MAX_GENERATIONS_PER_STEP = individual.MAX_GENERATIONS_PER_STEP
 MUTATION_RATE = individual.MUTATION_RATE
+Geometry = individual.Geometry
 
 def crossover(parent1, parent2):
     """Perform order crossover (OX1) to produce a child permutation."""
     size = len(parent1.queens)
-    child = Individual(0)
+    child = Individual(0, geometry=parent1.geometry)  # Inherit geometry from parent
     child.queens = [None] * size
 
     # Choose two crossover points
@@ -49,37 +50,9 @@ def extend_population(population, board_size):
 
 def select_parents(population):
     """Return two parents selected from the population using some selection strategy."""
-    # For simplicity, let's just randomly select two parents
     parent1 = random.choice(population)
     parent2 = random.choice(population)
     return parent1, parent2
-
-# analytic solution using backtracking algorithm
-# for comparison/benchmarking
-
-def is_safe(board, row, col):
-    # Check for column and diagonal conflicts
-    for i, c in enumerate(board):
-        if c == col or abs(i - row) == abs(c - col):
-            return False
-    return True
-
-def place_queens(n, row, board, result, m):
-    if len(result) == m:
-        return
-    if row == n:
-        result.append(board[:])
-        return
-    for col in range(n):
-        if is_safe(board, row, col):
-            board.append(col)
-            place_queens(n, row + 1, board, result, m)
-            board.pop()
-
-def solve_n_queens(n, m):
-    result = []
-    place_queens(n, 0, [], result, m)
-    return result
 def validate_solution(individ, size):
     """Validate that the solution has exactly 'size' queens, unique columns, and no diagonal conflicts."""
     if len(individ.queens) != size:
@@ -89,11 +62,53 @@ def validate_solution(individ, size):
     if individ.fitness() != 0:  # Check for no diagonal conflicts
         return False
     return True
+# analytic solution using backtracking algorithm
+# for comparison/benchmarking
 
-def run_single_iteration(board_size,population_size=POPULATION_SIZE,max_generations_per_step=MAX_GENERATIONS_PER_STEP,mutation_rate=MUTATION_RATE):
+
+def check_euclidean_conflict(i, row, c, col):
+    """Check for diagonal conflict in Euclidean geometry."""
+    return abs(i - row) == abs(c - col)
+
+def check_toroidal_conflict(i, row, c, col, board_length):
+    """Check for diagonal conflict in Toroidal geometry."""
+    return abs(i - row) == abs(c - col) or abs(i - row) == (board_length - abs(c - col))
+
+def is_safe(board, row, col, geometry):
+    """Check if placing a queen at (row, col) is safe based on the geometry."""
+    for i, c in enumerate(board):
+        if c == col:  # Column conflict
+            return False
+        if geometry == Geometry.EUCLIDEAN:
+            if check_euclidean_conflict(i, row, c, col):
+                return False
+        elif geometry == Geometry.TOROIDAL:
+            if check_toroidal_conflict(i, row, c,col, len(board)):
+                return False
+    return True
+def place_queens(n, row, board, result, m, geometry):
+    if len(result) == m:
+        return
+    if row == n:
+        result.append(board[:])
+        return
+    for col in range(n):
+        if is_safe(board, row, col, geometry):
+            board.append(col)
+            place_queens(n, row + 1, board, result, m, geometry)
+            board.pop()
+
+
+def solve_n_queens(n, m, geometry=Geometry.EUCLIDEAN):
+    result = []
+    place_queens(n, 0, [], result, m, geometry)
+    return result
+
+
+def run_single_iteration(board_size,population_size=POPULATION_SIZE,max_generations_per_step=MAX_GENERATIONS_PER_STEP,mutation_rate=MUTATION_RATE, geometry=Geometry.EUCLIDEAN):
     """Run a single iteration of the incremental genetic algorithm for N-Queens."""
     current_size = 1
-    population = [Individual(current_size, board_size) for _ in range(population_size)]
+    population = [Individual(current_size, board_size,geometry) for _ in range(population_size)]
     solution_found = False
     start_time = time.perf_counter()
     def has_solution(population_a):
