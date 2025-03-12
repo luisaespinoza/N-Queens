@@ -39,6 +39,21 @@ def select(population):
     tournament = random.sample(population, tournament_size)
     return min(tournament, key=lambda ind: ind.fitness())
 
+def extend_population(population, board_size):
+    """Extend each individual in the population to have `current_size + 1` queens."""
+    for p in population:
+        used_columns = [False] * board_size
+        for col in p.queens:
+            used_columns[col] = True
+        p.extend(used_columns, board_size)
+
+def select_parents(population):
+    """Return two parents selected from the population using some selection strategy."""
+    # For simplicity, let's just randomly select two parents
+    parent1 = random.choice(population)
+    parent2 = random.choice(population)
+    return parent1, parent2
+
 # analytic solution using backtracking algorithm
 # for comparison/benchmarking
 
@@ -75,20 +90,6 @@ def validate_solution(individ, size):
         return False
     return True
 
-def extend_population(population, board_size):
-    """Extend each individual in the population to have `current_size + 1` queens."""
-    for p in population:
-        used_columns = [False] * board_size
-        for col in p.queens:
-            used_columns[col] = True
-        p.extend(used_columns, board_size)
-
-def select_parents(population):
-    """Return two parents selected from the population using some selection strategy."""
-    # For simplicity, let's just randomly select two parents
-    parent1 = random.choice(population)
-    parent2 = random.choice(population)
-    return parent1, parent2
 def run_single_iteration(board_size):
     """Run a single iteration of the incremental genetic algorithm for N-Queens."""
     current_size = 1
