@@ -175,3 +175,5 @@ cython_debug/
 /.idea/N-Queens.iml
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
+/.vs/
+/.vs/
