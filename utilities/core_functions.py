@@ -90,10 +90,10 @@ def validate_solution(individ, size):
         return False
     return True
 
-def run_single_iteration(board_size):
+def run_single_iteration(board_size,population_size=POPULATION_SIZE,max_generations_per_step=MAX_GENERATIONS_PER_STEP,mutation_rate=MUTATION_RATE):
     """Run a single iteration of the incremental genetic algorithm for N-Queens."""
     current_size = 1
-    population = [Individual(current_size, board_size) for _ in range(POPULATION_SIZE)]
+    population = [Individual(current_size, board_size) for _ in range(population_size)]
     solution_found = False
     start_time = time.time()
     def has_solution(population_a):
@@ -102,7 +102,7 @@ def run_single_iteration(board_size):
 
 
     while current_size <= board_size:
-        for generation in range(MAX_GENERATIONS_PER_STEP):
+        for generation in range(max_generations_per_step):
             # Check if a solution is found in the current generation
             if has_solution(population):
                 solution_found=True
@@ -113,10 +113,10 @@ def run_single_iteration(board_size):
 
             # Create new population via selection, crossover, and mutation
             new_population = []
-            for _ in range(POPULATION_SIZE):
+            for _ in range(population_size):
                 parent1, parent2 = select_parents(population)
                 child = crossover(parent1, parent2)
-                child.mutate()
+                child.mutate(mutation_rate)
                 new_population.append(child)
             population = new_population
     end_time = time.time()
