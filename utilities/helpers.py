@@ -6,16 +6,17 @@ def print_solution(solution, size, board_size=BOARD_SIZE):
             if solution.queens[i] == j:
                 print("Q", end=" ")
             else:
-                print(".", end=" ")
+                print("█", end=" ")
         print()
 
 def print_backtracking_solution(board):
     """Print a single backtracking solution board."""
+    n = len(board)
     print("\nSolution Board:")
-    for row in board:
-        for cell in row:
-            if cell == 1:
+    for row in range(n):
+        for col in range(n):
+            if col == board[row]:
                 print("Q", end=" ")
             else:
-                print(".", end=" ")
+                print("█", end=" ")
         print()

@@ -62,14 +62,15 @@ def run_tests():
      # Backtracking Algorithm
     print("\nRunning Backtracking Algorithm...")
     start_time = time.time()
-    backtracking_solutions = solve_n_queens(board_size)
+    backtracking_solutions = solve_n_queens(board_size,num_iterations)
     end_time = time.time()
     backtracking_time = end_time - start_time
     backtracking_success = len(backtracking_solutions) > 0
     # Print one backtracking solution (if available)
     if backtracking_solutions:
-        print(f"  First solution found:")
-        print_backtracking_solution(backtracking_solutions[0])
+        for solution in backtracking_solutions:
+            print(f"  Solution found:")
+            print_backtracking_solution(solution)
 
     # Summary
     print("\nSummary of Results")

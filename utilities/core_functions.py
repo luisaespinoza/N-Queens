@@ -41,38 +41,29 @@ def select(population):
 
 # analytic solution using backtracking algorithm
 # for comparison/benchmarking
-def solve_n_queens(n):
-    def is_safe(board, row, col):
-        # Check this row on left side
-        for i in range(col):
-            if board[row][i] == 1:
-                return False
 
-        # Check upper diagonal on left side
-        for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-            if board[i][j] == 1:
-                return False
+def is_safe(board, row, col):
+    # Check for column and diagonal conflicts
+    for i, c in enumerate(board):
+        if c == col or abs(i - row) == abs(c - col):
+            return False
+    return True
 
-        # Check lower diagonal on left side
-        for i, j in zip(range(row, n, 1), range(col, -1, -1)):
-            if board[i][j] == 1:
-                return False
+def place_queens(n, row, board, result, m):
+    if len(result) == m:
+        return
+    if row == n:
+        result.append(board[:])
+        return
+    for col in range(n):
+        if is_safe(board, row, col):
+            board.append(col)
+            place_queens(n, row + 1, board, result, m)
+            board.pop()
 
-        return True
-
-    def place_queens(n, row, board):
-        if row == n:
-            result.append(board[:])
-            return
-        for col in range(n):
-            if is_safe(board, row, col):
-                board[row][col] = 1
-                place_queens(n, row + 1, board)
-                board[row][col] = 0
-
+def solve_n_queens(n, m):
     result = []
-    board = [[0]*n for _ in range(n)]
-    place_queens(n, 0, board)
+    place_queens(n, 0, [], result, m)
     return result
 def validate_solution(individ, size):
     """Validate that the solution has exactly 'size' queens, unique columns, and no diagonal conflicts."""
