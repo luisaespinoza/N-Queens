@@ -8,3 +8,14 @@ def print_solution(solution, size, board_size=BOARD_SIZE):
             else:
                 print(".", end=" ")
         print()
+
+def print_backtracking_solution(board):
+    """Print a single backtracking solution board."""
+    print("\nSolution Board:")
+    for row in board:
+        for cell in row:
+            if cell == 1:
+                print("Q", end=" ")
+            else:
+                print(".", end=" ")
+        print()
