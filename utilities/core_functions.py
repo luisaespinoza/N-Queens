@@ -95,7 +95,7 @@ def run_single_iteration(board_size,population_size=POPULATION_SIZE,max_generati
     current_size = 1
     population = [Individual(current_size, board_size) for _ in range(population_size)]
     solution_found = False
-    start_time = time.time()
+    start_time = time.perf_counter()
     def has_solution(population_a):
         """Return True if any individual in the population has a fitness of 0."""
         return any(ind.fitness() == 0 for ind in population_a)
@@ -119,7 +119,7 @@ def run_single_iteration(board_size,population_size=POPULATION_SIZE,max_generati
                 child.mutate(mutation_rate)
                 new_population.append(child)
             population = new_population
-    end_time = time.time()
+    end_time = time.perf_counter()
     time_taken = end_time - start_time
     solution = None
     if solution_found:

@@ -83,23 +83,23 @@ def run_tests(auto_mode=False, board_size=8, num_iterations=10, population_size=
                 if print_boards:
                     print(f"  Solution found: {solution.queens}")
                     print(f"  Fitness: {solution.fitness()}")
-                    print(f"  Time taken: {time_taken:.2f} seconds")
+                    print(f"  Time taken: {time_taken:.8f} seconds")
                     print_solution(solution, board_size, board_size)
                 if is_valid:
                     ga_valid_solutions += 1
                     ga_successes += 1
                 else:
                     print("  No solution found within generation limits.")
-                    print(f"  Time taken: {time_taken:.2f} seconds")
+                    print(f"  Time taken: {time_taken:.8f} seconds")
 
     # Backtracking Algorithm
     if run_backtracking:
 
         if print_boards:
             print("\nRunning Backtracking Algorithm...")
-            start_time = time.time()
+            start_time = time.perf_counter()
             backtracking_solutions = solve_n_queens(board_size, num_iterations)
-            end_time = time.time()
+            end_time = time.perf_counter()
             backtracking_time = end_time - start_time
             backtracking_success = len(backtracking_solutions) > 0
             # Print one backtracking solution (if available)
@@ -116,16 +116,16 @@ def run_tests(auto_mode=False, board_size=8, num_iterations=10, population_size=
     print(f"  Total runs: {num_iterations}")
     print(f"  Successful runs (solution found): {ga_successes}")
     print(f"  Valid solutions (correct format and no conflicts): {ga_valid_solutions}")
-    print(f"  Average time per run: {ga_total_time / num_iterations:.2f} seconds")
+    print(f"  Average time per run: {ga_total_time / num_iterations:.8f} seconds")
     if ga_successes > 0:
-        print(f"  Success rate: {(ga_successes / num_iterations) * 100:.2f}%")
+        print(f"  Success rate: {(ga_successes / num_iterations) * 100:.8f}%")
     else:
         print("  Success rate: 0%")
 
     if run_backtracking:
         print("\nBacktracking Algorithm Results:")
         print(f"  Solutions found: {len(backtracking_solutions)}")
-        print(f"  Time taken: {backtracking_time:.2f} seconds")
+        print(f"  Time taken: {backtracking_time:.8f} seconds")
         print("  Success:", "Yes" if backtracking_success else "No")
 
 # Main execution
