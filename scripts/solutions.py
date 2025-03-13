@@ -2,7 +2,8 @@ import random
 import time
 from utilities.core_functions import run_single_iteration, solve_n_queens
 from utilities.helpers import print_backtracking_solution, print_solution
-def run_tests(auto_mode=False, board_size=8, num_iterations=10, population_size=100, max_generations_per_step=500, mutation_rate=0.15, print_boards=True, run_backtracking=False):
+from utilities.individual import Geometry
+def run_tests(auto_mode=False, board_size=8, num_iterations=10, population_size=100, max_generations_per_step=500, mutation_rate=0.15, geometry=Geometry.TOROIDAL, print_boards=True, run_backtracking=False):
     """Main function to run multiple iterations and summarize results for a given board size."""
 
     print("N-Queens Solver: Genetic Algorithm vs Backtracking")
